@@ -24,3 +24,9 @@ grant execute on function public.create_account_transfer(uuid, uuid, uuid, numer
 grant execute on function public.resolve_invoice_dates(uuid, date) to authenticated;
 grant execute on function public.create_credit_card_expense(uuid, uuid, uuid, text, numeric, date, text) to authenticated;
 grant execute on function public.pay_credit_card_invoice(uuid, uuid, uuid, date) to authenticated;
+
+-- Funções internas: não são endpoints da aplicação.
+-- handle_new_user é usada apenas pelo trigger de auth.
+-- is_workspace_member é usada internamente pelas policies e RPCs.
+revoke execute on function public.handle_new_user() from public, anon, authenticated;
+revoke execute on function public.is_workspace_member(uuid) from public, anon, authenticated;
