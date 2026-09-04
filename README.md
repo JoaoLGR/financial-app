@@ -18,4 +18,6 @@ Fundação mobile-first para até duas pessoas, com Next.js, TypeScript, App Rou
 
 Na configuração do projeto hospedado, mantenha a Data API habilitada, desative a exposição automática de novas tabelas e aplique todas as migrations. A migration `006_api_grants.sql` concede acesso somente ao papel `authenticated`; as policies RLS continuam controlando quais linhas cada usuário pode acessar.
 
+Para convites por e-mail, configure o Site URL do Supabase para `https://financial-app-blond.vercel.app` e adicione `https://financial-app-blond.vercel.app/auth/callback` à lista de Redirect URLs. Em desenvolvimento, mantenha também `http://localhost:3000` e `http://localhost:3000/auth/callback`. O app possui a rota `/auth/callback` para finalizar a sessão e encaminhar o convidado ao dashboard.
+
 A primeira tela é intencionalmente um estado vazio: a próxima fatia deve implementar contas, categorias e o primeiro lançamento usando Server Actions/RPC transacional.
