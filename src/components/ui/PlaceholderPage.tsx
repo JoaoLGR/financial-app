@@ -1,0 +1,1 @@
+export function PlaceholderPage({ title, description }: { title: string; description: string }) { return <main className="placeholder-page"><span className="eyebrow">EM BREVE</span><h1>{title}</h1><p>{description}</p></main>; }

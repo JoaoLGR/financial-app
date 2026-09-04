@@ -1,0 +1,1 @@
+export function PageHeader() { return <header className="topbar"><div><span className="eyebrow">SEGUNDA, 04 DE SETEMBRO</span><h1>Bom dia, Ana <span aria-hidden="true">✦</span></h1></div><button className="avatar" aria-label="Abrir perfil">AS</button></header>; }

@@ -1,0 +1,31 @@
+alter table public.profiles enable row level security;
+alter table public.workspaces enable row level security;
+alter table public.workspace_members enable row level security;
+alter table public.accounts enable row level security;
+alter table public.categories enable row level security;
+alter table public.credit_cards enable row level security;
+alter table public.credit_card_invoices enable row level security;
+alter table public.recurrences enable row level security;
+alter table public.recurrence_versions enable row level security;
+alter table public.installment_groups enable row level security;
+alter table public.transactions enable row level security;
+alter table public.vehicles enable row level security;
+alter table public.vehicle_fuel_types enable row level security;
+alter table public.fuel_entries enable row level security;
+
+create or replace function public.is_workspace_member(target_workspace uuid) returns boolean language sql stable security definer set search_path = public as $$ select exists (select 1 from public.workspace_members where workspace_id = target_workspace and user_id = auth.uid()); $$;
+create policy profile_self on public.profiles for all using (id = auth.uid()) with check (id = auth.uid());
+create policy workspace_member_self on public.workspace_members for select using (user_id = auth.uid() or public.is_workspace_member(workspace_id));
+create policy workspace_access on public.workspaces for all using (created_by = auth.uid() or public.is_workspace_member(id)) with check (created_by = auth.uid());
+
+create policy accounts_workspace_access on public.accounts for all using (public.is_workspace_member(workspace_id)) with check (public.is_workspace_member(workspace_id));
+create policy categories_workspace_access on public.categories for all using (public.is_workspace_member(workspace_id)) with check (public.is_workspace_member(workspace_id));
+create policy cards_workspace_access on public.credit_cards for all using (public.is_workspace_member(workspace_id)) with check (public.is_workspace_member(workspace_id));
+create policy invoices_workspace_access on public.credit_card_invoices for all using (exists (select 1 from public.credit_cards c where c.id = credit_card_id and public.is_workspace_member(c.workspace_id))) with check (exists (select 1 from public.credit_cards c where c.id = credit_card_id and public.is_workspace_member(c.workspace_id)));
+create policy recurrences_workspace_access on public.recurrences for all using (public.is_workspace_member(workspace_id)) with check (public.is_workspace_member(workspace_id));
+create policy recurrence_versions_workspace_access on public.recurrence_versions for all using (exists (select 1 from public.recurrences r where r.id = recurrence_id and public.is_workspace_member(r.workspace_id))) with check (exists (select 1 from public.recurrences r where r.id = recurrence_id and public.is_workspace_member(r.workspace_id)));
+create policy installment_groups_workspace_access on public.installment_groups for all using (public.is_workspace_member(workspace_id)) with check (public.is_workspace_member(workspace_id));
+create policy transactions_workspace_access on public.transactions for all using (public.is_workspace_member(workspace_id)) with check (public.is_workspace_member(workspace_id));
+create policy vehicles_workspace_access on public.vehicles for all using (public.is_workspace_member(workspace_id)) with check (public.is_workspace_member(workspace_id));
+create policy vehicle_fuel_types_workspace_access on public.vehicle_fuel_types for all using (exists (select 1 from public.vehicles v where v.id = vehicle_id and public.is_workspace_member(v.workspace_id))) with check (exists (select 1 from public.vehicles v where v.id = vehicle_id and public.is_workspace_member(v.workspace_id)));
+create policy fuel_entries_workspace_access on public.fuel_entries for all using (public.is_workspace_member(workspace_id)) with check (public.is_workspace_member(workspace_id));

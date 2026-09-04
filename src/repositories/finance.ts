@@ -1,0 +1,5 @@
+import type { SupabaseClient } from '@supabase/supabase-js';
+export async function getWorkspaceId(client: SupabaseClient) { const { data } = await client.from('workspace_members').select('workspace_id').limit(1).single(); return data?.workspace_id ?? null; }
+export async function getAccounts(client: SupabaseClient, workspaceId: string) { return client.from('accounts').select('id,name,type,initial_balance,active').eq('workspace_id', workspaceId).order('active', { ascending: false }).order('name'); }
+export async function getCategories(client: SupabaseClient, workspaceId: string) { return client.from('categories').select('id,name,type,active').eq('workspace_id', workspaceId).order('active', { ascending: false }).order('name'); }
+export async function getTransactions(client: SupabaseClient, workspaceId: string) { return client.from('transactions').select('id,type,description,amount,transaction_date,competence_date,status,account_id,category_id,notes').eq('workspace_id', workspaceId).order('transaction_date', { ascending: false }).limit(100); }
