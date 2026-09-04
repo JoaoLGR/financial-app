@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 export async function PageHeader() {
   let name = 'Pessoa';
   let initials = 'P';
-  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY) {
     const client = await createClient();
     const { data: { user } } = await client.auth.getUser();
     if (user) {
