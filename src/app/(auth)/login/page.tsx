@@ -1,9 +1,11 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/browser';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -13,7 +15,7 @@ export default function LoginPage() {
     event.preventDefault(); setLoading(true); setError('');
     const { error: signInError } = await createClient().auth.signInWithPassword({ email, password });
     if (signInError) setError('Não foi possível entrar. Confira seu e-mail e senha.');
-    else window.location.assign('/dashboard');
+    else router.push('/dashboard');
     setLoading(false);
   }
 
